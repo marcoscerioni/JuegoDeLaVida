@@ -11,12 +11,10 @@ screen = pygame.display.set_mode((alto, ancho)) # Creo la pantalla del juego
 bg = 25, 25, 25 # Color de fondo gris oscuro. Intensidad en c/canal de color de 25
 screen.fill(bg)
 
-# Cantidad de Celdas en eje X && eje Y
-celdasX, celdasY = 50, 50
+celdasX, celdasY = 50, 50 # Cantidad de Celdas en eje X && eje Y
 
-# Ancho y alto de cada una de las celdas
-anchoX = ancho / celdasX
-altoY = alto / celdasY
+anchoX = ancho / celdasX # Ancho de cada una de las celdas
+altoY = alto / celdasY # Alto de cada una de las celdas
 
 """ 
 Estados de cada celda. 
@@ -33,36 +31,48 @@ gameState[22, 23] = 1
 gameState[21, 23] = 1
 gameState[20, 23] = 1
 
-
+pausarEjec = False # Control ejecucion.
 
 # Bucle de Ejecucion
 while True:
-	
-	# En cada iteracion tengo que realizar unac copia del estado actual del juego. 
-	newGameState = np.copy(gameState)
+	newGameState = np.copy(gameState) # Realizo una copia del estado actual del juego. 
 
 	screen.fill(bg) # Limpio info para que no se superponga
 	time.sleep(0.1) 
 
+	ev = pygame.event.get() # Registro eventos del teclado y mouse. 
+
+	for event in ev:
+		if event.type == pygame.KEYDOWN:
+			pausarEjec = not pausarEjec
+
+		mouseClick = pygame.mouse.get_pressed()
+		if sum(mouseClick) > 0:
+			posX, posY = pygame.mouse.get_pos()
+			celX, celY = int(np.floor(posX / anchoX)), int(np.floor(posY / altoY))
+			newGameState[celX, celY] = not mouseClick[2]
+
 	# Dos for que recorran el ejeX y el ejeY para cada celda generada
 	for y in range(0, celdasX):
 		for x in range(0, celdasY):
-			# Nº de vecinos cercanos. 
-			vecinos = gameState[(x-1) % celdasX, (y-1)  % celdasY] + \
-					  gameState[(x)   % celdasX, (y-1)  % celdasY] + \
-					  gameState[(x+1) % celdasX, (y-1)  % celdasY] + \
-					  gameState[(x-1) % celdasX, (y)    % celdasY] + \
-					  gameState[(x+1) % celdasX, (y)    % celdasY] + \
-					  gameState[(x-1) % celdasX, (y+1)  % celdasY] + \
-					  gameState[(x)   % celdasX, (y+1)  % celdasY] + \
-					  gameState[(x+1) % celdasX, (y+1)  % celdasY]
 
-			# Regla 1: Una celula muerta con 3 vecinos vivos, revive. 
-			if gameState[x, y] == 0 and vecinos == 3:
-				newGameState[x, y] = 1
-			elif gameState[x, y] == 1 and (vecinos < 2 or vecinos > 3):
-				newGameState[x, y] = 0
-			# Regla 2: Celula viva con menos de 2 o mas de 3 vecinos vivos, muere. 
+			if not pausarEjec:
+				# Nº de vecinos cercanos. 
+				vecinos = gameState[(x-1) % celdasX, (y-1)  % celdasY] + \
+						  gameState[(x)   % celdasX, (y-1)  % celdasY] + \
+						  gameState[(x+1) % celdasX, (y-1)  % celdasY] + \
+						  gameState[(x-1) % celdasX, (y)    % celdasY] + \
+						  gameState[(x+1) % celdasX, (y)    % celdasY] + \
+						  gameState[(x-1) % celdasX, (y+1)  % celdasY] + \
+						  gameState[(x)   % celdasX, (y+1)  % celdasY] + \
+						  gameState[(x+1) % celdasX, (y+1)  % celdasY]
+
+				# Regla 1: Una celula muerta con 3 vecinos vivos, revive. 
+				if gameState[x, y] == 0 and vecinos == 3:
+					newGameState[x, y] = 1
+				# Regla 2: Celula viva con menos de 2 o mas de 3 vecinos vivos, muere. 
+				elif gameState[x, y] == 1 and (vecinos < 2 or vecinos > 3):
+					newGameState[x, y] = 0
 
 
 			# Coordenadas de los rectangulos
@@ -70,10 +80,11 @@ while True:
 					((x+1) * anchoX,   y     * altoY),
 					((x+1) * anchoX,   (y+1) * altoY),
 					((x)   * anchoX,   (y+1) * altoY)]
+			
 			if newGameState[x, y] == 0:
-				pygame.draw.polygon(screen, (128, 128, 128), poly, 1) # Dibujamos celdas grises del polygono dado. 
+				pygame.draw.polygon(screen, (128, 128, 128), poly, 1)
 			else:
-				pygame.draw.polygon(screen, (255, 255, 255), poly, 0) # Dibujamos celdas grises del polygono dado. 
+				pygame.draw.polygon(screen, (255, 255, 255), poly, 0) 
 
 	# Actualizo el estado del juego
 	gameState = np.copy(newGameState)
