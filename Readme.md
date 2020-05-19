@@ -35,4 +35,4 @@ El tablero es una malla plana formada por cuadrados (las "células") que se exti
  - Al **presionar cualquier tecla** se va a **pausar** el juego. Arriba en el título va a aparecer "PAUSADO" y se va a pintar de otro color las celdas "vivas". 
  - A su vez, al **apretar el click izquierdo**, se pueden "**revivir / nacer**" nuevas celdas, y al **apretar el click derecho** se van a "**morir**" esas celdas seleccionadas; como se muestra en el siguiente gif:
 
-    ![](Jugando.gif)
+    ![](jugando.gif)
