@@ -32,12 +32,43 @@ Vivas = 1. Muertas = 0.
 gameState = np.zeros((celdasX, celdasY))
 
 
-# Ejemplo en donde se va moviendo. 
+# Planeador (Glidder) 
+gameState[1, 0] = 1
+gameState[2, 1] = 1
+gameState[2, 2] = 1
+gameState[1, 2] = 1
+gameState[0, 2] = 1
+
+# Nave espacial pesada
+gameState[19, 21] = 1
+gameState[20, 21] = 1
 gameState[21, 21] = 1
-gameState[22, 22] = 1
-gameState[22, 23] = 1
-gameState[21, 23] = 1
-gameState[20, 23] = 1
+gameState[22, 21] = 1
+gameState[23, 21] = 1
+gameState[24, 21] = 1
+gameState[18, 22] = 1
+gameState[24, 22] = 1
+gameState[24, 23] = 1
+gameState[18, 24] = 1
+gameState[23, 24] = 1
+gameState[20, 25] = 1
+gameState[21, 24] = 1
+
+# Nave Espacial Ligera
+gameState[21, 30] = 1
+gameState[22, 30] = 1
+gameState[23, 31] = 1
+gameState[22, 31] = 1
+gameState[20, 31] = 1
+gameState[19, 31] = 1
+gameState[19, 32] = 1
+gameState[20, 32] = 1
+gameState[21, 32] = 1
+gameState[22, 32] = 1
+gameState[20, 33] = 1
+gameState[21, 33] = 1
+
+
 
 pausarEjec = False # Control ejecucion.
 
